@@ -11,10 +11,8 @@ import java.util.List;
 
 public class PlayerPage extends BasePage {
     public static HashMap<String, List<String>> headers = new HashMap<>();
-    public static HashMap<String,String> mainMenu = new HashMap<>();
-    public static HashMap<String,String> menuUsers = new HashMap<>();
-
-    //TODO вопрос!!!!!!
+    public static HashMap<String, String> mainMenu = new HashMap<>();
+    public static HashMap<String, String> menuUsers = new HashMap<>();
 
     public PlayerPage(WebDriver chromeDriver) {
         super(chromeDriver);
@@ -43,7 +41,6 @@ public class PlayerPage extends BasePage {
     }
 
     // table
-
     //лист строк
     public List<WebElement> getRows() {
         waitVisibility(By.xpath("//tbody//tr"));
@@ -55,7 +52,7 @@ public class PlayerPage extends BasePage {
         List<WebElement> rows = getRows();
         List<String> columns = new ArrayList<>();
         for (WebElement row : rows) {
-            columns.add((row.findElement((By.xpath(".//td["+ headers.get(s).get(1)+"]"))).getText()));
+            columns.add((row.findElement((By.xpath(".//td[" + headers.get(s).get(1) + "]"))).getText()));
         }
         return columns;
     }
@@ -75,30 +72,30 @@ public class PlayerPage extends BasePage {
         headers.put("Status", Arrays.asList("//*[@id=\"payment-system-transaction-grid_c14\"]/a", "15"));
     }
 
-    public void selectMainSideMenu(){
-        mainMenu.put("Dashboard","//*[@id=\"nav\"]/li[1]/a/span");
-        mainMenu.put("Agent Info","//*[@id=\"nav\"]/li[2]/a/span");
-        mainMenu.put("Settings","//*[@id=\"nav\"]/li[3]/a/span");
-        mainMenu.put("Games","//*[@id=\"nav\"]/li[4]/a/span");
-        mainMenu.put("Money","//*[@id=\"nav\"]/li[5]/a/span");
-        mainMenu.put("Content","//*[@id=\"nav\"]/li[6]/a/span");
-        mainMenu.put("SEO","//*[@id=\"nav\"]/li[7]/a/span");
-        mainMenu.put("Users","//*[@id=\"nav\"]/li[8]/a/span");
-        mainMenu.put("Bonuses","//*[@id=\"nav\"]/li[9]/a/span");
-        mainMenu.put("Jackpots","//*[@id=\"nav\"]/li[10]/a/span");
-        mainMenu.put("Messaging","//*[@id=\"nav\"]/li[11]/a/span");
-        mainMenu.put("FAQ","//*[@id=\"nav\"]/li[12]/a/span");
-        mainMenu.put("Shop","//*[@id=\"nav\"]/li[13]/a/span");
-        mainMenu.put("Logs","//*[@id=\"nav\"]/li[14]/a/span");
-        mainMenu.put("Reports","//*[@id=\"nav\"]/li[15]/a/span");
+    public void selectMainSideMenu() {
+        mainMenu.put("Dashboard", "//*[@id=\"nav\"]/li[1]/a/span");
+        mainMenu.put("Agent Info", "//*[@id=\"nav\"]/li[2]/a/span");
+        mainMenu.put("Settings", "//*[@id=\"nav\"]/li[3]/a/span");
+        mainMenu.put("Games", "//*[@id=\"nav\"]/li[4]/a/span");
+        mainMenu.put("Money", "//*[@id=\"nav\"]/li[5]/a/span");
+        mainMenu.put("Content", "//*[@id=\"nav\"]/li[6]/a/span");
+        mainMenu.put("SEO", "//*[@id=\"nav\"]/li[7]/a/span");
+        mainMenu.put("Users", "//*[@id=\"nav\"]/li[8]/a/span");
+        mainMenu.put("Bonuses", "//*[@id=\"nav\"]/li[9]/a/span");
+        mainMenu.put("Jackpots", "//*[@id=\"nav\"]/li[10]/a/span");
+        mainMenu.put("Messaging", "//*[@id=\"nav\"]/li[11]/a/span");
+        mainMenu.put("FAQ", "//*[@id=\"nav\"]/li[12]/a/span");
+        mainMenu.put("Shop", "//*[@id=\"nav\"]/li[13]/a/span");
+        mainMenu.put("Logs", "//*[@id=\"nav\"]/li[14]/a/span");
+        mainMenu.put("Reports", "//*[@id=\"nav\"]/li[15]/a/span");
     }
 
-    public void selectMenuUsers(){
-        menuUsers.put("Players","//*[@id=\"s-menu-users\"]/li[1]/a/text()");
-        menuUsers.put("Players registrations","//*[@id=\"s-menu-users\"]/li[2]/a/text()");
-        menuUsers.put("Users","//*[@id=\"s-menu-users\"]/li[3]/a/text()");
-        menuUsers.put("Devices","//*[@id=\"s-menu-users\"]/li[4]/a/text()");
-        menuUsers.put("Blocked players","//*[@id=\"s-menu-users\"]/li[5]/a/text()");
+    public void selectMenuUsers() {
+        menuUsers.put("Players", "//*[@id=\"s-menu-users\"]/li[1]/a");
+        menuUsers.put("Players registrations", "//*[@id=\"s-menu-users\"]/li[2]/a/text()");
+        menuUsers.put("Users", "//*[@id=\"s-menu-users\"]/li[3]/a/text()");
+        menuUsers.put("Devices", "//*[@id=\"s-menu-users\"]/li[4]/a/text()");
+        menuUsers.put("Blocked players", "//*[@id=\"s-menu-users\"]/li[5]/a/text()");
     }
 }
 

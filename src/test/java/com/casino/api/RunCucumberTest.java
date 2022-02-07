@@ -8,7 +8,7 @@ import org.junit.runner.RunWith;
 @RunWith(Cucumber.class)
 @CucumberOptions(
         plugin = {"pretty"},
-        tags = "@image",
+        tags = "@Enabled",
         glue = {"com.casino.api.steps"},
         features = "src/test/resources/api/features")
 public class RunCucumberTest {

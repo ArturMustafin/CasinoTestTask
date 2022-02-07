@@ -11,6 +11,7 @@ import org.junit.jupiter.api.Assertions;
 
 import java.nio.charset.StandardCharsets;
 import java.util.Base64;
+import java.util.Objects;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
@@ -32,16 +33,19 @@ public class ApiSteps {
     @When("Получить токен гостя username: {}, password: {}")
     public void getTokenGuestStep(String username, String password) {
         basicToken = getBase64Encoder(username + ":" + password);
-        PostGuestRequest credentials = new PostGuestRequest("client_credentials", "guest:default");
-        responseGuest = casinoService.getTokenGuest(basicToken, credentials);
+        Objects.requireNonNull(basicToken, "basicToken must not be null");
+        log.info("Получен Authorization : Basic {}", basicToken);
+        PostGuestRequest bodyGuest = new PostGuestRequest("client_credentials", "guest:default");
+        responseGuest = (PostGuestResponse) casinoService.getToken(basicToken, bodyGuest, PostGuestResponse.class);
+        log.info("response: {}", responseGuest);
         tokenGuest = responseGuest.getAccessToken();
+        log.info("Получен токен гостя: {}", responseGuest.getAccessToken());
     }
 
     @Then("Гость авторизован")
     public void guestLogInStep() {
         assertEquals("Bearer", responseGuest.getTokenType());
         Assertions.assertNotNull(responseGuest.getAccessToken());
-        log.info("Получен токен гостя: {}", responseGuest);
     }
 
     @When("Зарегистрировать игрока")
@@ -53,20 +57,25 @@ public class ApiSteps {
                 passBasePlayer,
                 passBasePlayer,
                 faker.internet().emailAddress());
+        log.info("request body: {}", bodyRegisterPlayer);
         responseRegisterPlayer = casinoService.registerPlayer(tokenGuest, bodyRegisterPlayer);
+        log.info("response body: {}", responseRegisterPlayer);
+        log.info("Новый пользователь зарегистрирован: {}", responseRegisterPlayer.getUsername());
     }
 
     @Then("Игрок зарегистрирован")
     public void checkPlayerStep() {
         Assertions.assertEquals(userNamePlayer, responseRegisterPlayer.getUsername());
-        log.info("Новый пользователь зарегистрирован: {}", responseRegisterPlayer);
     }
 
     @When("Авторизоваться под созданным игроком")
     public void logInPlayerStep() {
         PostLogInCreatedPlayerRequest bodyLogIn = new PostLogInCreatedPlayerRequest(
                 "password", userNamePlayer, passBasePlayer);
-        responseLogIn = casinoService.logInCreatedPlayer(basicToken, bodyLogIn);
+        log.info("request body: {}", bodyLogIn);
+        responseLogIn = (PostLogInCreatedPlayerResponse) casinoService.getToken(basicToken, bodyLogIn, PostLogInCreatedPlayerResponse.class);
+        log.info("response body: {}", responseLogIn);
+        log.info("Пользователь: {}, авторизовался.", userNamePlayer);
         token = responseLogIn.getAccessToken();
     }
 
@@ -74,12 +83,12 @@ public class ApiSteps {
     public void authorizedPlayerStep() {
         assertEquals("Bearer", responseLogIn.getTokenType());
         Assertions.assertNotNull(responseLogIn.getAccessToken());
-        log.info("Пользователь: {}, авторизовался.", userNamePlayer);
     }
 
     @When("Запросить данные профиля игрока")
     public void infoPlayerStep() {
         responseInfoPlayer = casinoService.getInfoPlayer(responseRegisterPlayer.getId(), token);
+        log.info("response body: {}", responseInfoPlayer);
     }
 
     @Then("Найден игрок")
@@ -91,6 +100,7 @@ public class ApiSteps {
     @When("Запросить данные другого игрока")
     public void infoOtherPlayerStep() {
         responseInfoOtherPlayer = casinoService.getInfoOtherPlayer(352531, token);
+        log.error("response body: {}", responseInfoOtherPlayer);
     }
 
     @Then("Игрок не найден")

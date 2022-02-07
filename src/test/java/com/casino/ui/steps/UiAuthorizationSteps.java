@@ -24,7 +24,6 @@ public class UiAuthorizationSteps extends BaseTest {
         end();
     }
 
-
     @Given("открыть главную страницу")
     public void openLoginUrl() {
         main.goTo();
@@ -44,15 +43,9 @@ public class UiAuthorizationSteps extends BaseTest {
     }
 
     @When("нажать на выпадающее меню {}, перейти в {}")
-    public void openPagePlayers(String mainMenu,String mainUser) {
-
-        // не работает
-
-
-        System.out.println("    fdf    " +   mainMenu +"\n" + "   fdfd" +   mainUser);
+    public void openPagePlayers(String mainMenu, String mainUser) {
         playerPage.mainMenuButtonClick(mainMenu)
                 .usersMenuButtonClick(mainUser);
-
     }
 
     @Then("успешно открылась страница {}")

@@ -1,7 +1,9 @@
 @casino
+@ui
+@Enabled
 Feature: casino-ui-test
 
-  Scenario Outline: войти в систему с валидными учетными данными
+  Scenario Outline: Проверка сортировки столбца
     Given открыть главную страницу
     When ввести login admin1 и password [9k<k8^z!+$$GkuP
     Then пользователь admin1 успешно авторизован
