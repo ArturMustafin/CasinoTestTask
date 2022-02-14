@@ -2,17 +2,19 @@ package com.casino.dto;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.*;
+import lombok.experimental.Accessors;
 
-@Data
-@ToString
-@NoArgsConstructor
-@AllArgsConstructor
-@Builder
+@Getter
+@Setter
+@Accessors(fluent = true)
 public class PostLogInCreatedPlayerRequest {
 
     @JsonProperty("grant_type")
     public String grantType;
-    public String username;
-    public String password;
 
+    @JsonProperty("username")
+    public String username;
+
+    @JsonProperty("password")
+    public String password;
 }
