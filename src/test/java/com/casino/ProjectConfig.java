@@ -7,4 +7,5 @@ public interface ProjectConfig extends Config{
 
     String baseUrl();
 
+    boolean logging();
 }

@@ -1,13 +1,11 @@
-package com.casino.dto;
+package com.casino.response;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.*;
 
-@Data
+@Getter
+@Setter
 @ToString
-@NoArgsConstructor
-@AllArgsConstructor
-@Builder
 public class PostLogInCreatedPlayerResponse {
 
     @JsonProperty("token_type")

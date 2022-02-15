@@ -7,6 +7,7 @@ import lombok.experimental.Accessors;
 
 @Getter
 @Setter
+@ToString
 @Accessors(fluent = true)
 public class PostGuestRequest {
 

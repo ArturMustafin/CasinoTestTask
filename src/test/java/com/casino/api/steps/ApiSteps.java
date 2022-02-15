@@ -1,8 +1,11 @@
 package com.casino.api.steps;
 
 import com.casino.ProjectConfig;
-import com.casino.api.services.CasinoService;
+import com.casino.api.conditions.BodyFieldCondition;
+import com.casino.api.conditions.Conditions;
+import com.casino.api.services.UserApiService;
 import com.casino.dto.*;
+import com.casino.response.*;
 import com.github.javafaker.Faker;
 import io.cucumber.java.Before;
 import io.cucumber.java.en.Then;
@@ -17,14 +20,16 @@ import java.nio.charset.StandardCharsets;
 import java.util.Base64;
 import java.util.Objects;
 
+import static com.casino.api.conditions.Conditions.statusCode;
+import static org.hamcrest.core.IsNull.notNullValue;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 @Slf4j
 public class ApiSteps {
-    private final CasinoService casinoService = new CasinoService();
+    private final UserApiService userApiService = new UserApiService();
     private static final Faker faker = new Faker();
-    private PostGuestResponse responseGuest;
-    private PostRegisterPlayerResponse responseRegisterPlayer;
+    private GuestResponse responseGuest;
+    private RegisterPlayerResponse responseRegisterPlayer;
     private PostLogInCreatedPlayerResponse responseLogIn;
     private GetInfoPlayerResponse responseInfoPlayer;
     private GetNotFoundResponse responseInfoOtherPlayer;
@@ -35,7 +40,7 @@ public class ApiSteps {
     private String basicToken;
 
     @Before(order = 1)
-    public void setUp(){
+    public void setUp() {
         ProjectConfig config = ConfigFactory.create(ProjectConfig.class, System.getProperties());
         RestAssured.baseURI = config.baseUrl();
     }
@@ -49,10 +54,14 @@ public class ApiSteps {
                 .grantType("client_credentials")
                 .scope("guest:default");
 
-        responseGuest = (PostGuestResponse) casinoService.getToken(basicToken, bodyGuest, PostGuestResponse.class);
+        responseGuest = userApiService.getToken(basicToken, bodyGuest)
+                .shouldHave(statusCode(200))
+                .shouldHave(Conditions.bodyField("access_token", notNullValue()))
+                .asPojo(GuestResponse.class);
+
         log.info("response: {}", responseGuest);
         tokenGuest = responseGuest.getAccessToken();
-        log.info("Получен токен гостя: {}", responseGuest.getAccessToken());
+        log.info("Получен токен гостя: {}", tokenGuest);
     }
 
     @Then("Гость авторизован")
@@ -70,11 +79,12 @@ public class ApiSteps {
                 .passwordChange(passBasePlayer)
                 .passwordRepeat(passBasePlayer)
                 .email(faker.internet().emailAddress());
-        log.info("request body: {}", bodyRegisterPlayer);
 
-        responseRegisterPlayer = casinoService.registerPlayer(tokenGuest, bodyRegisterPlayer);
+        responseRegisterPlayer = userApiService.registerPlayer(tokenGuest, bodyRegisterPlayer)
+                .shouldHave(statusCode(201))
+                .asPojo(RegisterPlayerResponse.class);
         log.info("response body: {}", responseRegisterPlayer);
-        log.info("Новый пользователь зарегистрирован: {}", responseRegisterPlayer.getUsername());
+        log.info("Новый пользователь зарегистрирован: {}", userNamePlayer);
     }
 
     @Then("Игрок зарегистрирован")
@@ -88,9 +98,10 @@ public class ApiSteps {
                 .grantType("password")
                 .username(userNamePlayer)
                 .password(passBasePlayer);
-        log.info("request body: {}", bodyLogIn);
 
-        responseLogIn = (PostLogInCreatedPlayerResponse) casinoService.getToken(basicToken, bodyLogIn, PostLogInCreatedPlayerResponse.class);
+        responseLogIn = userApiService.getToken(basicToken, bodyLogIn)
+                .shouldHave(statusCode(200))
+                .asPojo(PostLogInCreatedPlayerResponse.class);
         log.info("response body: {}", responseLogIn);
         log.info("Пользователь: {}, авторизовался.", userNamePlayer);
         token = responseLogIn.getAccessToken();
@@ -104,7 +115,9 @@ public class ApiSteps {
 
     @When("Запросить данные профиля игрока")
     public void infoPlayerStep() {
-        responseInfoPlayer = casinoService.getInfoPlayer(responseRegisterPlayer.getId(), token);
+        responseInfoPlayer = userApiService.getInfoPlayer(responseRegisterPlayer.getId(), token)
+                .shouldHave(statusCode(200))
+                .asPojo(GetInfoPlayerResponse.class);
         log.info("response body: {}", responseInfoPlayer);
     }
 
@@ -116,7 +129,9 @@ public class ApiSteps {
 
     @When("Запросить данные другого игрока")
     public void infoOtherPlayerStep() {
-        responseInfoOtherPlayer = casinoService.getInfoOtherPlayer(352531, token);
+        responseInfoOtherPlayer = userApiService.getInfoOtherPlayer(352531, token)
+                .shouldHave(statusCode(404))
+                .asPojo(GetNotFoundResponse.class);
         log.error("response body: {}", responseInfoOtherPlayer);
     }
 

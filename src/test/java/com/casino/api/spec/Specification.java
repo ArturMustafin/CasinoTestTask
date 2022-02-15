@@ -13,15 +13,13 @@ public class Specification {
 
     public static <T> RequestSpecification reqSpecGuest(String basicToken, T body){
         return new RequestSpecBuilder()
-                .addHeader("Authorization", "Basic  " + basicToken)
-                .setContentType(ContentType.JSON)
+                .addHeader("Authorization", "Basic " + basicToken)
                 .setBody(body)
                 .build();
     }
 
     public static ResponseSpecification resSpec200(){
         return new ResponseSpecBuilder()
-                .expectContentType(ContentType.JSON)
                 .expectStatusLine("HTTP/1.1 200 OK")
                 .expectStatusCode(200)
                 .build();
@@ -29,14 +27,12 @@ public class Specification {
 
     public static RequestSpecification reqSpecNewPlayer(PostRegisterPlayerRequest bodyRegisterPlayer){
         return new RequestSpecBuilder()
-                .setContentType(ContentType.JSON)
                 .setBody(bodyRegisterPlayer)
                 .build();
     }
 
     public static ResponseSpecification resSpec201(){
         return new ResponseSpecBuilder()
-                .expectContentType(ContentType.JSON)
                 .expectStatusLine("HTTP/1.1 201 Created")
                 .expectStatusCode(201)
                 .build();
@@ -44,13 +40,11 @@ public class Specification {
 
     public static RequestSpecification reqSpecInfoPlayer(){
         return new RequestSpecBuilder()
-                .setContentType(ContentType.JSON)
                 .build();
     }
 
     public static ResponseSpecification resSpecInfoOtherPlayer(){
         return new ResponseSpecBuilder()
-                .expectContentType(ContentType.JSON)
                 .expectStatusLine("HTTP/1.1 404 Not Found")
                 .expectStatusCode(404)
                 .build();
