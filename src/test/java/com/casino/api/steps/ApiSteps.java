@@ -1,9 +1,8 @@
 package com.casino.api.steps;
 
 import com.casino.ProjectConfig;
-import com.casino.api.conditions.BodyFieldCondition;
 import com.casino.api.conditions.Conditions;
-import com.casino.api.services.UserApiService;
+import com.casino.api.services.RequestApiService;
 import com.casino.dto.*;
 import com.casino.response.*;
 import com.github.javafaker.Faker;
@@ -26,7 +25,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 
 @Slf4j
 public class ApiSteps {
-    private final UserApiService userApiService = new UserApiService();
+    private final RequestApiService userApiService = new RequestApiService();
     private static final Faker faker = new Faker();
     private GuestResponse responseGuest;
     private RegisterPlayerResponse responseRegisterPlayer;
@@ -58,8 +57,6 @@ public class ApiSteps {
                 .shouldHave(statusCode(200))
                 .shouldHave(Conditions.bodyField("access_token", notNullValue()))
                 .asPojo(GuestResponse.class);
-
-        log.info("response: {}", responseGuest);
         tokenGuest = responseGuest.getAccessToken();
         log.info("Получен токен гостя: {}", tokenGuest);
     }
@@ -83,7 +80,6 @@ public class ApiSteps {
         responseRegisterPlayer = userApiService.registerPlayer(tokenGuest, bodyRegisterPlayer)
                 .shouldHave(statusCode(201))
                 .asPojo(RegisterPlayerResponse.class);
-        log.info("response body: {}", responseRegisterPlayer);
         log.info("Новый пользователь зарегистрирован: {}", userNamePlayer);
     }
 
@@ -102,7 +98,6 @@ public class ApiSteps {
         responseLogIn = userApiService.getToken(basicToken, bodyLogIn)
                 .shouldHave(statusCode(200))
                 .asPojo(PostLogInCreatedPlayerResponse.class);
-        log.info("response body: {}", responseLogIn);
         log.info("Пользователь: {}, авторизовался.", userNamePlayer);
         token = responseLogIn.getAccessToken();
     }
@@ -118,7 +113,6 @@ public class ApiSteps {
         responseInfoPlayer = userApiService.getInfoPlayer(responseRegisterPlayer.getId(), token)
                 .shouldHave(statusCode(200))
                 .asPojo(GetInfoPlayerResponse.class);
-        log.info("response body: {}", responseInfoPlayer);
     }
 
     @Then("Найден игрок")
@@ -129,10 +123,9 @@ public class ApiSteps {
 
     @When("Запросить данные другого игрока")
     public void infoOtherPlayerStep() {
-        responseInfoOtherPlayer = userApiService.getInfoOtherPlayer(352531, token)
+        responseInfoOtherPlayer = userApiService.getInfoPlayer(352531, token)
                 .shouldHave(statusCode(404))
                 .asPojo(GetNotFoundResponse.class);
-        log.error("response body: {}", responseInfoOtherPlayer);
     }
 
     @Then("Игрок не найден")

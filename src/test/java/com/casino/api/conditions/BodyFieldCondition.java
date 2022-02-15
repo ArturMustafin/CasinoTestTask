@@ -5,7 +5,7 @@ import lombok.RequiredArgsConstructor;
 import org.hamcrest.Matcher;
 
 @RequiredArgsConstructor
-public class BodyFieldCondition implements Condition{
+public class BodyFieldCondition implements Condition {
 
     private final String jsonPath;
     private final Matcher matcher;
@@ -17,6 +17,6 @@ public class BodyFieldCondition implements Condition{
 
     @Override
     public String toString() {
-        return "body field [" + jsonPath + "] " +matcher;
+        return "body field [" + jsonPath + "] " + matcher;
     }
 }

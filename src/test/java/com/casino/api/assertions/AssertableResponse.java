@@ -19,11 +19,12 @@ public class AssertableResponse {
     }
 
     public <T> T asPojo(Class<T> tClass) {
-        return response.as(tClass);
+        T res = response.as(tClass);
+        log.info("response body: {}", res);
+        return res;
     }
 
     public Headers headers() {
         return response.getHeaders();
     }
-
 }
