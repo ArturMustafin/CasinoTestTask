@@ -30,7 +30,7 @@ public class LoginPage extends BasePage {
         return this;
     }
 
-    public String loginCorrect() {
+    public String getLogin() {
         return chromeDriver.findElement(By.cssSelector("[class=dropdown-toggle] span")).getText();
     }
 }

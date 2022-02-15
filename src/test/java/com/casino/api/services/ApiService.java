@@ -17,6 +17,7 @@ import java.util.List;
 
 @Slf4j
 public class ApiService {
+
     protected <T> RequestSpecification setup(T body) {
         if (body != null) {
             log.info("request body: {}", body);
@@ -24,11 +25,11 @@ public class ApiService {
         return RestAssured
                 .given().contentType(ContentType.JSON)
                 .when()
-                .filters(getFilters());
+                .filters(changeLog());
     }
 
     // on & off log
-    private List<Filter> getFilters() {
+    private List<Filter> changeLog() {
         ProjectConfig config = ConfigFactory.create(ProjectConfig.class, System.getProperties());
         if (config.logging()) {
             return Arrays.asList(new RequestLoggingFilter(), new ResponseLoggingFilter(), new AllureRestAssured());

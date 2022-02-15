@@ -10,6 +10,7 @@ import static com.casino.api.spec.Specification.*;
 
 @Slf4j
 public class RequestApiService extends ApiService {
+
     public AssertableResponse getToken(String basicToken, PostGuestRequest guestBody) {
         return new AssertableResponse(setup(guestBody)
                 .spec(reqSpecGuest(basicToken, guestBody))

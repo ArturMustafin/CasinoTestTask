@@ -9,7 +9,7 @@ public class Main extends BasePage {
         super(chromeDriver);
     }
 
-    public Main goTo() {
+    public Main goToLoginPage() {
         chromeDriver.get(URL_LOGIN);
         return this;
     }
