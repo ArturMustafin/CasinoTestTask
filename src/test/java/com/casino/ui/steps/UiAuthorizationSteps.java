@@ -26,7 +26,7 @@ public class UiAuthorizationSteps extends BaseTest {
 
     @Given("открыть главную страницу")
     public void openLoginUrl() {
-        main.goTo();
+        main.goToLoginPage();
     }
 
     @When("ввести login {} и password {}")
@@ -39,7 +39,7 @@ public class UiAuthorizationSteps extends BaseTest {
 
     @Then("пользователь {} успешно авторизован")
     public void assertLogin(String elementLogin) {
-        Assert.assertEquals(elementLogin, loginPage.loginCorrect());
+        Assert.assertEquals(elementLogin, loginPage.getLogin());
     }
 
     @When("нажать на выпадающее меню {}, перейти в {}")

@@ -2,15 +2,18 @@ package com.casino.dto;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.*;
+import lombok.experimental.Accessors;
 
-@Data
+
+@Getter
+@Setter
 @ToString
-@NoArgsConstructor
-@AllArgsConstructor
+@Accessors(fluent = true)
 public class PostGuestRequest {
 
     @JsonProperty("grant_type")
     private String grantType;
-    private String scope;
 
+    @JsonProperty("scope")
+    private String scope;
 }
